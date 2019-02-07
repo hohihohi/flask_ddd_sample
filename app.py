@@ -1,4 +1,4 @@
-from fds.domain import DataSource
+from fds.domains import DataSource
 
 
 def main():
