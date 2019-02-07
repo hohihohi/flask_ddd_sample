@@ -1,1 +1,1 @@
-from .entity import DataSource, DataType, Object
+from .entity import DataSource, DataType, Object  # NOQA

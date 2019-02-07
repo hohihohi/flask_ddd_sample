@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from dateutil.tz import tzutc
 
 
@@ -37,7 +38,8 @@ class Bucket:
     def objects(self, objects):
         self._objects = objects
 
-    # get_object_by_name is the function to get the object from Bucket.objects by name
+    # get_object_by_name is the function to get the object from Bucket.objects
+    # by name
     def get_object_by_name(self, object_name):
         for obj in self._objects:
             if obj.name == object_name:

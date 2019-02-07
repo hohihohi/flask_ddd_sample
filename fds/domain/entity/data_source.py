@@ -1,5 +1,6 @@
-from enum import Enum, auto
 from datetime import datetime
+from enum import Enum, auto
+
 from dateutil.tz import tzutc
 
 from .object import Object
