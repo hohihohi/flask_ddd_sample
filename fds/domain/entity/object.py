@@ -1,3 +1,4 @@
+from copy import copy
 from datetime import datetime
 
 from dateutil.tz import tzutc
@@ -34,3 +35,7 @@ class Object:
     @version_id.setter
     def version_id(self, version_id):
         self._version_id = version_id
+
+    # copy is the method to copy Object instance
+    def copy(self):
+        return copy(self)

@@ -6,5 +6,3 @@ RUN pip install pipenv==11.10.4 && \
     pipenv install --ignore-pipfile -d
 
 ENTRYPOINT ["pipenv", "run"]
-
-

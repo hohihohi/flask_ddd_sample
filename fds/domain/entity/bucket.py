@@ -1,3 +1,4 @@
+from copy import copy
 from datetime import datetime
 
 from dateutil.tz import tzutc
@@ -45,3 +46,13 @@ class Bucket:
             if obj.name == object_name:
                 return object
         return None
+
+    # copy is the method to copy Bucket instance
+    def copy(self):
+        # NOTE: should not use copy.deepcopy because it is very slow
+        copied = copy(self)
+        objects = []
+        for obj in self._objects:
+            objects.append(obj)
+        copied.objects = objects
+        return copied

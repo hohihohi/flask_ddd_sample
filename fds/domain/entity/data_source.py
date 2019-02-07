@@ -1,3 +1,4 @@
+from copy import copy
 from datetime import datetime
 from enum import Enum, auto
 
@@ -47,3 +48,20 @@ class DataSource:
         self.created_at = created_at
         self.updated_at = updated_at
         self.deleted_at = deleted_at
+
+    # Getter for object
+    @property
+    def object(self):
+        return self._object
+
+    # Setter for object
+    @object.setter
+    def object(self, object):
+        self._object = object
+
+    # copy is the method to copy DataType instance
+    def copy(self):
+        # NOTE: should not use copy.deepcopy because it is very slow
+        copied = copy(self)
+        copied.object = self._object.copy()
+        return copied
