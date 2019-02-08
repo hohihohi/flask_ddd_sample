@@ -1,6 +1,6 @@
 from flask import Flask
 
-from fds.domains import DataSource
+from flaskd3.domains import DataSource
 
 
 app = Flask(__name__)
