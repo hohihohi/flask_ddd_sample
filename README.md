@@ -22,13 +22,14 @@ TBD
 
 ### Coding style
 
-* directory tree (this project inspired onion-architecture)
+* directory tree (this project inspired clean-architecture)
 
 ```
 TBD
 ```
 
 * Use some make-commands. please see Makefile.
+* [reference](https://nrslib.com/clean-flow-of-control/)
 
 ## License
 
