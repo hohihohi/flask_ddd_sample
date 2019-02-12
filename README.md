@@ -16,9 +16,26 @@ docker-compose up -d
 
 ## Run
 
-```shell
-TBD
+* run container for development
+
 ```
+# confirm your uid and gid
+$ id
+$ cat .env
+UID=${YOUR_UID}
+GID=${YOUR_GID}
+docker network create flaskd3
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+* set up database
+
+```
+docker-compose exec -T mysql mysql -uroot -pflaskd3 flaskd3 < sql/create_database.sql
+docker-compose exec -T mysql mysql -uroot -pflaskd3 flaskd3 < sql/create_table.sql
+```
+
 
 ### Coding style
 

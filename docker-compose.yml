@@ -3,7 +3,32 @@ services:
   app:
     build:
       context: .
+    container_name: flaskd3-api
+    hostname: flaskd3-api
     environment:
       PYTHONPATH: /usr/local/app
+    depends_on:
+      - mysql
     volumes:
       - ./:/usr/local/app
+    env_file: .env
+    user: "${UID}:${GID}"
+    command: tail -f /dev/null
+
+  mysql:
+    image: mysql:5.7
+    container_name: flaskd3-db
+    hostname: flaskd3-db
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: flaskd3
+      MYSQL_USER: flaskd3
+      MYSQL_PASSWORD: flaskd3
+      MYSQL_DATABASE: flaskd3
+    command: --sql_mode="no_engine_substitution"
+
+networks:
+  default:
+    external:
+      name: flaskd3
