@@ -11,6 +11,7 @@ services:
       - mysql
     volumes:
       - ./:/usr/local/app
+      - hoge:/usr/local/app/.venv
     env_file: .env
     user: "${UID}:${GID}"
     command: tail -f /dev/null
@@ -32,3 +33,7 @@ networks:
   default:
     external:
       name: flaskd3
+
+# ignore .venv volume mount
+volumes:
+  hoge:
