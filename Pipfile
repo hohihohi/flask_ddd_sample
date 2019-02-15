@@ -7,6 +7,7 @@ name = "pypi"
 flask = "*"
 python-dateutil = "*"
 sqlalchemy = "*"
+retry = "*"
 
 [dev-packages]
 autopep8 = "*"
@@ -14,6 +15,9 @@ flake8 = "*"
 ipdb = "*"
 isort = "*"
 pylint = "*"
+pytest = "*"
+v = {editable = true,version = "*"}
+mysqlclient = "*"
 
 [requires]
 python_version = "3.7"
