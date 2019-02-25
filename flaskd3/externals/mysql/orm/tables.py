@@ -100,7 +100,7 @@ class Object(Base):
         server_default=text('CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)')
     )
     deleted_at = Column('deleted_at', DATETIME(fsp=6), nullable=False)
-    data = relationship('Data', backref='objects')  # One To Many
+    data = relationship('Datum', backref='objects')  # One To Many
     UniqueConstraint('name', 'version', 'deleted_at', name='unq_name_version')
 
     @property
