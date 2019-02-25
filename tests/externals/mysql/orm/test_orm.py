@@ -56,8 +56,6 @@ def test_create_models():
     # DESC each TABLES
     expect_columns = []
     for table_name, table in client.base.metadata.tables.items():
-        print(f'{table_name}:', table.columns)
-        print('_extract_only_column_name:', _extract_only_column_name(table_name, table.columns))
         if table_name == 'data_types':
             expect_columns = ['name']
         if table_name == 'regions':
@@ -66,6 +64,7 @@ def test_create_models():
             expect_columns = [
                 'id',
                 'user_id',
+                'object_id',
                 'name',
                 'data_type',
                 'created_at',
@@ -91,7 +90,6 @@ def test_create_models():
                 'name',
                 'region',
                 'version',
-                'data_id',
                 'bucket_id',
                 'created_at',
                 'updated_at',
