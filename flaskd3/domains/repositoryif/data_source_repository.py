@@ -18,17 +18,17 @@ class DataSourceRepositoryIF(metaclass=ABCMeta):
     def find_by_user_id(self, user_id):
         pass
 
-    # save data source with the object to database. This method should return saved data source object or error
+    # save data source to database. This method should return saved data source object or error
     @abstractmethod
     def save(self, data_source):
         pass
 
-    # delete data source with the object from database. This method should return deleted data source object or error
+    # delete data source from database. This method should return deleted data source object or error
     @abstractmethod
     def delete(self, data_source):
         pass
 
-    # update data source with the object to database. This method should return updated data source object or error
+    # update data source to database. This method should return updated data source object or error
     @abstractmethod
     def update(self, data_source):
         pass
