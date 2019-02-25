@@ -20,25 +20,25 @@ class ObjectRepositoryIF(metaclass=ABCMeta):
 
     # save object source to database. This method should return saved object or error
     @abstractmethod
-    def save(self, data_source):
+    def save(self, ob):
         pass
 
     # save bucket source database. This method should return saved bucket or error
     @abstractmethod
-    def save_bucket(self, data_source):
+    def save_bucket(self, bucket):
         pass
 
     # delete object source from database. This method should return deleted object or error
     @abstractmethod
-    def delete(self, data_source):
+    def delete(self, ob):
         pass
 
     # delete bucket source from database. This method should return deleted bucket or error
     @abstractmethod
-    def delete_bucket(self, data_source):
+    def delete_bucket(self, ob):
         pass
 
     # update object source to database. This method should return updated object or error
     @abstractmethod
-    def update(self, data_source):
+    def update(self, ob):
         pass

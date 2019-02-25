@@ -11,7 +11,6 @@ class Bucket:
             name,
             region,
             id=None,
-            objects=None,
             created_at=datetime.now(),
             updated_at=datetime.now(),
             # TODO : define default delete time as const
@@ -21,38 +20,12 @@ class Bucket:
         self.user_id = user_id
         self.name = name
         self.region = region
-        if objects is None:
-            self._objects = []
-        else:
-            self._objects = objects
         self.created_at = created_at
         self.updated_at = updated_at
         self.deleted_at = deleted_at
-
-    # Getter for version_id
-    @property
-    def objects(self):
-        return self._objects
-
-    # Setter for version_id
-    @objects.setter
-    def objects(self, objects):
-        self._objects = objects
-
-    # get_object_by_name is the function to get the object from Bucket.objects
-    # by name
-    def get_object_by_name(self, object_name):
-        for obj in self._objects:
-            if obj.name == object_name:
-                return object
-        return None
 
     # copy is the method to copy Bucket instance
     def copy(self):
         # NOTE: should not use copy.deepcopy because it is very slow
         copied = copy(self)
-        objects = []
-        for obj in self._objects:
-            objects.append(obj)
-        copied.objects = objects
         return copied
