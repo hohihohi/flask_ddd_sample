@@ -11,7 +11,7 @@ ENCODING = 'utf-8'
 # 1. use Base=declarative_base()
 # 2. connect RDBMS to call create_engine
 # 3. create tables if tables are not found to call create_all
-class MySQLClient:
+class MySQLClient(object):
 
     # set up engine and session
     def __init__(self, user_name, password, host_ip, db_name, echo=False, pool_recycle=600):
@@ -52,7 +52,9 @@ class MySQLClient:
     def create_session(self):
         s = self.Session()
         try:
+            # __enter__
             retry_call(s.execute, fargs=['SELECT 1'], tries=6, delay=10)
             yield s
         finally:
+            # __exit__
             s.close()
