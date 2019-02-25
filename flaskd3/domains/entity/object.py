@@ -11,8 +11,8 @@ class Object:
         name,
         region,
         id=None,
-        version_id=None,
-        bucket_id=None,
+        version='unknown',
+        bucket=None,
         created_at=datetime.now(),
         updated_at=datetime.now(),
         # TODO : define default delete time as const
@@ -22,26 +22,26 @@ class Object:
         self.user_id = user_id
         self.name = name
         self.region = region
-        self._version_id = version_id
-        self._bucket_id = bucket_id
+        self._version = version
+        self._bucket = bucket
         self.created_at = created_at
         self.updated_at = updated_at
         self.deleted_at = deleted_at
 
-    # Getter for bucket_id
+    # Getter for bucket
     @property
-    def bucket_id(self):
-        return self._bucket_id
+    def bucket(self):
+        return self._bucket
 
     # Getter for version_id
     @property
-    def version_id(self):
-        return self._version_id
+    def version(self):
+        return self._version
 
     # Setter for version_id
-    @version_id.setter
-    def version_id(self, version_id):
-        self._version_id = version_id
+    @version.setter
+    def version(self, version):
+        self._version = version
 
     # copy is the method to copy Object instance
     def copy(self):

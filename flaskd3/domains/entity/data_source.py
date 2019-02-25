@@ -56,8 +56,8 @@ class DataSource:
 
     # Setter for object
     @object.setter
-    def object(self, object):
-        self._object = object
+    def object(self, obj):
+        self._object = obj
 
     # copy is the method to copy DataType instance
     def copy(self):
