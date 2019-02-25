@@ -21,7 +21,7 @@ CREATE TABLE buckets(
     updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     deleted_at DATETIME(6) NOT NULL DEFAULT '9999-12-31 23:59:59',
     UNIQUE unq_bucket_user_id_name_region (user_id, name, region, deleted_at),
-    CONSTRAINT bucket_region_fk FOREIGN KEY (region) REFERENCES regions (name) ON UPDATE CASCADE
+    CONSTRAINT FOREIGN KEY (region) REFERENCES regions (name) ON UPDATE CASCADE
 ) Engine=InnoDB CHARSET=utf8mb4;
 
 CREATE TABLE objects (
@@ -35,8 +35,8 @@ CREATE TABLE objects (
     updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     deleted_at DATETIME(6) NOT NULL DEFAULT '9999-12-31 23:59:59',
     UNIQUE unq_name_version (name, version, deleted_at),
-    CONSTRAINT object_region_fk FOREIGN KEY (region) REFERENCES regions (name) ON UPDATE CASCADE,
-    CONSTRAINT object_bucket_id_fk FOREIGN KEY (bucket_id) REFERENCES buckets (id) ON UPDATE CASCADE
+    CONSTRAINT FOREIGN KEY (region) REFERENCES regions (name) ON UPDATE CASCADE,
+    CONSTRAINT FOREIGN KEY (bucket_id) REFERENCES buckets (id) ON UPDATE CASCADE
 ) Engine=InnoDB CHARSET=utf8mb4;
 
 CREATE TABLE data (
@@ -49,6 +49,6 @@ CREATE TABLE data (
     updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     deleted_at DATETIME(6) NOT NULL DEFAULT '9999-12-31 23:59:59',
     UNIQUE unq_user_id_name (user_id, name, deleted_at),
-    CONSTRAINT data_type_fk FOREIGN KEY (data_type) REFERENCES data_types (name) ON UPDATE CASCADE,
-    CONSTRAINT data_object_id_fk FOREIGN KEY (object_id) REFERENCES objects (id) ON UPDATE CASCADE
+    CONSTRAINT FOREIGN KEY (data_type) REFERENCES data_types (name) ON UPDATE CASCADE,
+    CONSTRAINT FOREIGN KEY (object_id) REFERENCES objects (id) ON UPDATE CASCADE
 ) Engine=InnoDB CHARSET=utf8mb4;
