@@ -60,7 +60,6 @@ class Bucket(Base):
     object = relationship('Object', backref='bucket')  # One To Many
     UniqueConstraint('user_id', 'name', 'region', 'deleted_at', name='unq_bucket_user_id_name_region')
 
-    @property
     def serialize(self):
         return {
             'id': self.id,
@@ -103,7 +102,6 @@ class Object(Base):
     data = relationship('Datum', backref='objects')  # One To Many
     UniqueConstraint('name', 'version', 'deleted_at', name='unq_name_version')
 
-    @property
     def serialize(self):
         return {
             'id': self.id,
@@ -146,7 +144,6 @@ class Datum(Base):
     deleted_at = Column('deleted_at', DATETIME(fsp=6), nullable=False)
     UniqueConstraint('user_id', 'name', 'deleted_at', name='unq_user_id_name')
 
-    @property
     def serialize(self):
         return {
             'id': self.id,
