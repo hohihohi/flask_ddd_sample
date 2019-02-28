@@ -96,11 +96,11 @@ class InvalidDataError(Exception):
 
 class NotFoundError(Exception):
 
-    def __init__(self, param=''):
+    def __init__(self, param='', raw=''):
         if param == '':
             message = 'A resource with specified parameter has been not found.'
         else:
-            message = f'A {param} with specified parameter has been not found.'
+            message = f'A {param} with specified parameter = {raw} has been not found.'
         Exception.__init__(self, message)
         self.code = 'NotFoundError'
         self.log_message = message
