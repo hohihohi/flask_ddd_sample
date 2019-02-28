@@ -4,7 +4,7 @@ from enum import Enum, auto
 
 from dateutil.tz import tzutc
 
-from .object import Object
+from .object import DataObject
 
 
 class DataType(Enum):
@@ -41,7 +41,7 @@ class DataSource:
         self.name = name
         # TODO: check df is pandas.dataframe object or None
         self._df = df
-        self._object = Object(user_id, name, region)
+        self._object = DataObject(user_id, name, region)
         if data_type not in DataType.describe():
             raise Exception("invalid data source type")
         self.data_type = DataType[data_type]

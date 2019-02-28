@@ -4,7 +4,7 @@ from datetime import datetime
 from dateutil.tz import tzutc
 
 
-class Object:
+class DataObject:
     def __init__(
         self,
         user_id,
@@ -33,16 +33,21 @@ class Object:
     def bucket(self):
         return self._bucket
 
-    # Getter for version_id
+    # Getter for version
     @property
     def version(self):
         return self._version
+
+    # Setter for bucket
+    @bucket.setter
+    def bucket(self, bucket):
+        self._bucket = bucket
 
     # Setter for version_id
     @version.setter
     def version(self, version):
         self._version = version
 
-    # copy is the method to copy Object instance
+    # copy is the method to copy DataObject instance
     def copy(self):
         return copy(self)
