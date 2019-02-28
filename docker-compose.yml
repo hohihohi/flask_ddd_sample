@@ -10,8 +10,13 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ./:/usr/local/app
-      - hoge:/usr/local/app/.venv
+      - ./flaskd3:/usr/local/app/flaskd3
+      - ./sql:/usr/local/app/sql
+      - ./tests:/usr/local/app/tests
+      - ./app.py:/usr/local/app/app.py
+      - ./Makefile:/usr/local/app/Makefile
+      - ./Pipfile:/usr/local/app/Pipfile
+      - ./Pipfile.lock:/usr/local/app/Pipfile.lock
     env_file: .env
     user: "${UID}:${GID}"
     command: tail -f /dev/null
@@ -33,7 +38,3 @@ networks:
   default:
     external:
       name: flaskd3
-
-# ignore .venv volume mount
-volumes:
-  hoge:
