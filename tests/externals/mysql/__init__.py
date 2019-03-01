@@ -39,7 +39,7 @@ def valid_data_source():
 def valid_object():
     return DataObject(
         'abc12345',
-        'test_data_source',
+        'test_data_source',  # object name == data source name
         'jp-east-1',
     )
 
