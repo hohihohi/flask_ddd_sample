@@ -181,7 +181,7 @@ def test_update(ormapper, valid_object, valid_bucket):
         object_assertions(expect, actual)
 
 
-def test_update_with_unique_error(ormapper, valid_object, valid_bucket):
+def test_update_with_unique_restriction_error(ormapper, valid_object, valid_bucket):
     with ormapper.create_session() as session:
         delete_record_from_database(session)
         object_repository = ObjectRepository(session)
