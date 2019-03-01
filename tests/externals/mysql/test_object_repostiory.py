@@ -1,7 +1,7 @@
 from flaskd3.externals.mysql import ObjectRepository, MySQLClient, orm
 from flaskd3.domains import DataObject, Bucket
 import pytest
-
+import sys
 
 ###############
 # pre process #
@@ -130,7 +130,7 @@ def test_find_by_user_id(ormapper, valid_object, valid_bucket):
         obj_1 = valid_object.copy()
         obj_1.bucket = bucket
         obj_2 = valid_object.copy()
-        obj_2.name = "test_object2"
+        obj_2.name = 'test_object2'
         obj_2.bucket = bucket
         saved_1 = object_repository.save(obj_1)
         saved_2 = object_repository.save(obj_2)
@@ -171,12 +171,10 @@ def test_save_with_duplicate_error(ormapper, valid_object, valid_bucket):
         obj_2 = valid_object.copy()
         obj_2.bucket = bucket
         expect = 'Invalid parameter duplicate error occurred: Object'
-        try:
-            # call method to test
-            _ = object_repository.save(obj_1)
-            _ = object_repository.save(obj_2)
-        except Exception:
-            assert expect == Exception.message
+        # call method to test
+        _ = object_repository.save(obj_1)
+        actual = object_repository.save(obj_2)
+        assert expect == str(actual)
 
 
 def test_save_bucket(ormapper, valid_bucket):
@@ -199,9 +197,110 @@ def test_save_bucket_with_duplicate_error(ormapper, valid_bucket):
         _delete_record_from_database(session)
         object_repository = ObjectRepository(session)
         expect = 'Invalid parameter duplicate error occurred: Bucket'
-        try:
-            # call method to test
-            _ = object_repository.save_bucket(valid_bucket)
-            _ = object_repository.save_bucket(valid_bucket)
-        except Exception:
-            assert expect == Exception.message
+        # call method to test
+        _ = object_repository.save_bucket(valid_bucket)
+        actual = object_repository.save_bucket(valid_bucket)
+        assert expect == str(actual)
+
+
+def test_delete(ormapper, valid_object, valid_bucket):
+    with ormapper.create_session() as session:
+        _delete_record_from_database(session)
+        object_repository = ObjectRepository(session)
+        # save data
+        bucket = object_repository.save_bucket(valid_bucket)
+        obj = valid_object.copy()
+        obj.bucket = bucket
+        expect = object_repository.save(obj)
+        # call method to test
+        actual = object_repository.delete(expect)
+        object_assertions(expect, actual)
+
+
+def test_delete_with_non_exist_object(ormapper, valid_object, valid_bucket):
+    with ormapper.create_session() as session:
+        _delete_record_from_database(session)
+        object_repository = ObjectRepository(session)
+        # save data
+        bucket = object_repository.save_bucket(valid_bucket)
+        obj = valid_object.copy()
+        obj.bucket = bucket
+        # call method to test
+        expect = f'Cannot delete object because object was not found: {obj.name}'
+        actual = object_repository.delete(obj)
+        assert expect == str(actual)
+
+
+def test_delete_bucket(ormapper, valid_bucket):
+    with ormapper.create_session() as session:
+        _delete_record_from_database(session)
+        object_repository = ObjectRepository(session)
+        # save data
+        expect = object_repository.save_bucket(valid_bucket)
+        # call method to test
+        actual = object_repository.delete_bucket(expect)
+        bucket_assertions(expect, actual)
+
+
+def test_delete_bucket_used_some_objects(ormapper, valid_object, valid_bucket):
+    with ormapper.create_session() as session:
+        _delete_record_from_database(session)
+        object_repository = ObjectRepository(session)
+        # save data
+        bucket = object_repository.save_bucket(valid_bucket)
+        obj = valid_object.copy()
+        obj.bucket = bucket
+        _ = object_repository.save(obj)
+        # call method to test
+        expect = f'Cannot delete bucket because some objects use it: {bucket.name}'
+        actual = object_repository.delete_bucket(bucket)
+        assert expect == str(actual)
+
+
+def test_update(ormapper, valid_object, valid_bucket):
+    with ormapper.create_session() as session:
+        _delete_record_from_database(session)
+        object_repository = ObjectRepository(session)
+        # save data
+        bucket = object_repository.save_bucket(valid_bucket)
+        obj = valid_object.copy()
+        obj.bucket = bucket
+        expect = object_repository.save(obj)
+        expect.name = 'update_object'
+        # call method to test
+        actual = object_repository.update(expect)
+        object_assertions(expect, actual)
+
+
+def test_update_with_unique_error(ormapper, valid_object, valid_bucket):
+    with ormapper.create_session() as session:
+        _delete_record_from_database(session)
+        object_repository = ObjectRepository(session)
+        # save data
+        bucket = object_repository.save_bucket(valid_bucket)
+        obj_1 = valid_object.copy()
+        obj_1.bucket = bucket
+        obj_2 = valid_object.copy()
+        obj_2.bucket = bucket
+        obj_2.name = 'test_object2'
+        saved_1 = object_repository.save(obj_1)
+        saved_2 = object_repository.save(obj_2)
+        # call method to test
+        saved_2.name = saved_1.name
+        expect = 'Invalid parameter duplicate error occurred: Object'
+        actual = object_repository.update(saved_2)
+        assert expect == str(actual)
+
+
+def test_update_with_non_exist_object(ormapper, valid_object, valid_bucket):
+    with ormapper.create_session() as session:
+        _delete_record_from_database(session)
+        object_repository = ObjectRepository(session)
+        # save data
+        bucket = object_repository.save_bucket(valid_bucket)
+        obj = valid_object.copy()
+        obj.bucket = bucket
+        # call method to test
+        expect = f'Cannot update object because object was not found: {obj.name}'
+        actual = object_repository.update(obj)
+        assert expect == str(actual)

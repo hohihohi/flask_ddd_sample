@@ -35,7 +35,7 @@ class ObjectRepositoryIF(metaclass=ABCMeta):
 
     # delete bucket source from database. This method should return deleted bucket or error
     @abstractmethod
-    def delete_unnecessary_bucket(self, bucket):
+    def delete_bucket(self, bucket):
         pass
 
     # update object source to database. This method should return updated object or error

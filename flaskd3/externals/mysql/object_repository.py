@@ -44,7 +44,7 @@ class ObjectRepository(domains.ObjectRepositoryIF):
                 return None
             return ObjectRepository._bucket_record_to_model(record)
         except Exception:
-            return domains.NotFoundError(param="Bucket ID", raw=bucket_id)
+            return domains.NotFoundError(param='Bucket ID', raw=bucket_id)
 
     def _object_record_to_model(self, record):
         # find bucket
@@ -68,7 +68,10 @@ class ObjectRepository(domains.ObjectRepositoryIF):
                 .query(orm.Object) \
                 .filter_by(bucket_id=bucket_id) \
                 .filter(orm.Object.deleted_at > datetime.now())
-            if len(records) == 0:
+            if not records:
+                return True
+            record_list = [self._object_record_to_model(record) for record in records]
+            if len(record_list) == 0:
                 return True
             return False
         except Exception:
@@ -113,7 +116,6 @@ class ObjectRepository(domains.ObjectRepositoryIF):
             if not records:
                 return []
             record_list = [self._object_record_to_model(record) for record in records]
-            print(f"record_list: {record_list}")
             return record_list
         except Exception:
             return domains.NotFoundError(param=user_id)
@@ -200,20 +202,18 @@ class ObjectRepository(domains.ObjectRepositoryIF):
                 .first()
             if found_obj is None:
                 self.session.flush()
-                return Exception(f'Cannot delete {ob.name} object')
-            self.session.delete(record)
+                return Exception(f'Cannot delete object because object was not found: {ob.name}')
+            self.session.delete(found_obj)
             # reflect database(commit should be called when update, insert, delete)
             self.session.commit()
-            deleted = self.session.query(orm.Object) \
-                .filter_by(id=found_obj.id) \
-                .first()
             self.session.flush()
-            return self._object_record_to_model(deleted)
+            found_obj.deleted_at = datetime.now()
+            return self._object_record_to_model(found_obj)
         except (InvalidRequestError, ObjectNotExecutableError) as e:
             return Exception(f'Cannot delete {ob.name} object: {str(e)}')
 
     # delete bucket source from database. This method should return deleted bucket or error
-    def delete_unnecessary_bucket(self, bucket):
+    def delete_bucket(self, bucket):
         def _bucket_to_records(b):
             return orm.Bucket(
                 id=b.id,
@@ -227,17 +227,24 @@ class ObjectRepository(domains.ObjectRepositoryIF):
         if self._should_delete_bucket(bucket.id):
             del_bucket = self._find_bucket_by_id(bucket.id)
             try:
-                bucket_record = _bucket_to_records(del_bucket)
-                self.session.delete(bucket_record)
-                self.session.commit()
-                deleted = self.session.query(orm.Bucket) \
-                    .filter_by(id=bucket.id) \
+                record = _bucket_to_records(del_bucket)
+                # find target data
+                found_bucket = self.session.query(orm.Bucket) \
+                    .filter_by(id=record.id) \
                     .first()
+                if found_bucket is None:
+                    self.session.flush()
+                    # TODO: this error is critical !! but don't stop application
+                    return Exception(f'Cannot delete object because bucket was not found: {bucket.name}')
+                self.session.delete(found_bucket)
+                self.session.commit()
                 self.session.flush()
-                return self._bucket_record_to_model(deleted)
+                found_bucket.deleted_at = datetime.now()
+                return self._bucket_record_to_model(found_bucket)
             except (InvalidRequestError, ObjectNotExecutableError) as e:
                 return Exception(f'Cannot delete {bucket.name} bucket: {str(e)}')
-        return None
+        self.session.flush()
+        return Exception(f'Cannot delete bucket because some objects use it: {bucket.name}')
 
     # update data source with the object to database. This method should return updated data source object or error
     def update(self, ob):
@@ -259,13 +266,17 @@ class ObjectRepository(domains.ObjectRepositoryIF):
             found_obj = self.session.query(orm.Object) \
                 .filter_by(id=record.id) \
                 .first()
-            # TODO: handle found_data is None
+            if found_obj is None:
+                self.session.flush()
+                return Exception(f'Cannot update object because object was not found: {ob.name}')
             self.session.merge(record)
             self.session.commit()
             updated = self.session.query(orm.Object) \
-                .filter_by(id=found_obj.id) \
+                .filter_by(id=record.id) \
                 .first()
             self.session.flush()
             return self._object_record_to_model(updated)
-        except (InvalidRequestError, ObjectNotExecutableError) as e:
-            return Exception(f'Cannot update {ob.name} object: {str(e)}')
+        except IntegrityError as e:
+            if 'Duplicate entry' in str(e):
+                return Exception('Invalid parameter duplicate error occurred: Object')
+            return e
