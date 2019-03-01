@@ -202,7 +202,7 @@ class ObjectRepository(domains.ObjectRepositoryIF):
                 .first()
             if found_obj is None:
                 self.session.flush()
-                return Exception(f'Cannot delete object because object was not found: {ob.name}')
+                return Exception(f'Cannot delete object because it was not found: {ob.name}')
             self.session.delete(found_obj)
             # reflect database(commit should be called when update, insert, delete)
             self.session.commit()
@@ -235,7 +235,7 @@ class ObjectRepository(domains.ObjectRepositoryIF):
                 if found_bucket is None:
                     self.session.flush()
                     # TODO: this error is critical !! but don't stop application
-                    return Exception(f'Cannot delete object because bucket was not found: {bucket.name}')
+                    return Exception(f'Cannot delete bucket because it was not found: {bucket.name}')
                 self.session.delete(found_bucket)
                 self.session.commit()
                 self.session.flush()
@@ -268,7 +268,7 @@ class ObjectRepository(domains.ObjectRepositoryIF):
                 .first()
             if found_obj is None:
                 self.session.flush()
-                return Exception(f'Cannot update object because object was not found: {ob.name}')
+                return Exception(f'Cannot update object because it was not found: {ob.name}')
             self.session.merge(record)
             self.session.commit()
             updated = self.session.query(orm.Object) \
