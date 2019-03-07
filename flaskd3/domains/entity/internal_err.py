@@ -1,4 +1,9 @@
-class UnknownError(Exception):
+class Error(Exception):
+    """Base class for exceptions in this module."""
+    pass
+
+
+class UnknownError(Error):
 
     def __init__(self, text=''):
         message = 'An internal error has occurred. Please try your query again at a later time.'
@@ -11,7 +16,7 @@ class UnknownError(Exception):
         self.log_message = log_message
 
 
-class StorageServiceError(Exception):
+class StorageServiceError(Error):
 
     def __init__(self, param=''):
         if param == '':
@@ -25,7 +30,7 @@ class StorageServiceError(Exception):
         self.log_message = log_message
 
 
-class MissingParameterError(Exception):
+class MissingParameterError(Error):
 
     def __init__(self, param=''):
         if param == '':
@@ -37,7 +42,7 @@ class MissingParameterError(Exception):
         self.log_message = message
 
 
-class InvalidParameterError(Exception):
+class InvalidParameterError(Error):
 
     def __init__(self, param=''):
         if param == '':
@@ -49,7 +54,7 @@ class InvalidParameterError(Exception):
         self.log_message = message
 
 
-class InvalidMethodError(Exception):
+class InvalidMethodError(Error):
 
     def __init__(self, method=''):
         if method == '':
@@ -61,7 +66,7 @@ class InvalidMethodError(Exception):
         self.log_message = message
 
 
-class InvalidURIError(Exception):
+class InvalidURIError(Error):
 
     def __init__(self, uri):
         message = f'URI is invalid. Please confirm request endpoint: {uri}'
@@ -70,7 +75,7 @@ class InvalidURIError(Exception):
         self.log_message = message
 
 
-class InvalidHeaderError(Exception):
+class InvalidHeaderError(Error):
 
     def __init__(self, param=''):
         if param == '':
@@ -82,7 +87,7 @@ class InvalidHeaderError(Exception):
         self.log_message = message
 
 
-class InvalidDataError(Exception):
+class InvalidDataError(Error):
 
     def __init__(self, data_name=''):
         if data_name == '':
@@ -94,7 +99,7 @@ class InvalidDataError(Exception):
         self.log_message = message
 
 
-class NotFoundError(Exception):
+class NotFoundError(Error):
 
     def __init__(self, param='', raw=''):
         if param == '':
@@ -106,7 +111,7 @@ class NotFoundError(Exception):
         self.log_message = message
 
 
-class TimeoutError(Exception):
+class ProcessTimeoutError(Error):
 
     def __init__(self):
         message = 'Time out error occurred.'
