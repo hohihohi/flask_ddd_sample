@@ -44,11 +44,11 @@ class MissingParameterError(Error):
 
 class InvalidParameterError(Error):
 
-    def __init__(self, param=''):
+    def __init__(self, param='', raw=''):
         if param == '':
-            message = 'Request parameters are invalid. Please confirm your request parameters.'
+            message = 'Request parameter is invalid. Please confirm your request parameter.'
         else:
-            message = f'Request parameters are invalid. Please confirm your request parameters: {param}'
+            message = f'Request parameter is invalid. Please confirm your request parameter [{param}:{raw}]'
         Exception.__init__(self, message)
         self.code = 'InvalidParameterError'
         self.log_message = message

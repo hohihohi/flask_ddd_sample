@@ -5,7 +5,7 @@ from enum import Enum, auto
 from dateutil.tz import tzutc
 
 from .object import DataObject
-
+from .internal_err import InvalidParameterError
 
 class DataType(Enum):
     RAW = auto()
@@ -23,6 +23,7 @@ class DataType(Enum):
 
 class DataSource:
 
+    # TODO: 引数にdata_objectをとるようにすること(なぜならdata objectはコレよりも前に作成されているべき)
     def __init__(
             self,
             user_id,
@@ -43,7 +44,7 @@ class DataSource:
         self._df = df
         self._object = DataObject(user_id, name, region)
         if data_type.upper() not in DataType.describe():
-            raise Exception("invalid data source type")
+            raise InvalidParameterError()
         self.data_type = DataType[data_type.upper()]
         self.created_at = created_at
         self.updated_at = updated_at
